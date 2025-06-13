@@ -14,6 +14,7 @@ def main():
     #Initialize count to keep track of correct guesses.
     
     attempts = 5
+
     while attempts >= 1:
 
         #Loop to run the game for 5 times.
@@ -33,13 +34,22 @@ def main():
         your_guess = get_guess()
 
         if check_guess(your_guess, word) == True:
+
             count += 1
-            
+
         else:
-            attempts -=1
-            print(f"You have {attempts} attempts left.")
+
+            if other_possible_words(hidden_word, words_lst) == True:
+
+                print(" This word is not the correct one, but it's possible so it goes to the extras list")
+                continue
+
+            else:
+                attempts -=1
+                print(f"You have {attempts} attempts left.")
 
     if attempts == 0:
+
         print("Game Over!")
         print(f"You guessed {count} words correctly.")
         print("Thanks for playing!")
@@ -66,6 +76,7 @@ def hide_parts(word, hide):
     """shuffle the indices so that we can generate missing places at random sites of the word."""
 
     for i in indices[0:hide]:
+
         word[i] = "_"       
 
         #replace the word with dashes.
@@ -78,29 +89,67 @@ def get_guess():
 
     #Prompts the user to guess the word.
 
-    guess = input("Enter your guess: ")
-    return guess
+    while True:
+        
+        guess = input("Enter your guess: ").strip().lower()
+
+        if guess:
+            return guess
+        
+        else:
+
+            print("Please enter a valid guess!")
 
 def check_guess(your_guess, word):
 
     #checks if the user's guess is correct or not.
 
-    if your_guess == word:
+    if your_guess.lower() == word.lower():
+
         print("Correct!")
         return True
             
     else:
+
         print("Wrong")
         print("The word was "+ word)
         return False
-        
+
+def other_possible_words(hidden_word, words_lst):
+
+    #This function is used to find other possible words that match the hidden word pattern.
+
+    possible_words = []
+
+    for word in words_lst:
+
+        if len(word) == len(hidden_word):
+
+            match = True
+
+            for j in range(len(hidden_word)):
+
+                if hidden_word[j] != "_" and hidden_word[j] != word[j]:
+                    
+                    match = False
+                    break
+
+            if match:
+
+                possible_words.append(word)
+
+    return len(possible_words) > 0
+
 def read_words_from_file(wordlist): 
 
     #Reads words from a file and returns a list of words.
 
     with open (wordlist, 'r') as file:
+
         all_words = file.read().splitlines()
+
     return all_words
 
 if __name__ == "__main__":
+
     main()
