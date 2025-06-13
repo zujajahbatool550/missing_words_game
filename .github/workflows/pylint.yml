@@ -1,19 +1,21 @@
-name: Pylint
+name: Lint with pylint
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.8", "3.9", "3.10"]
     steps:
-    - uses: actions/checkout@v4
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip setuptools wheel
-        pip install -e .  # Install your package in editable mode
-        pip install pytest flake8  # Add other tools if needed
-    - name: Run pylint
-      run: pylint missing_words_game.py
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10" # Match your project's version
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install pylint  # Explicitly install pylint
+          pip install -e .    # Install your package (requires setup.py)
+      - name: Run pylint
+        run: pylint missing_words_game.py
+    
