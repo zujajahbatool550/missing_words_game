@@ -8,5 +8,6 @@ setup(
         "numpy",  # Add your dependencies here (match conda-environment.yml)
         "pandas",
     ],
-    python_requires=">=3.10",  # Match your conda Python version
+    python_requires=">=3.10", 
+    include_package_data=True, # Match your conda Python version
 )
